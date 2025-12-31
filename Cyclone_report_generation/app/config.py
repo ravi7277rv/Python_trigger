@@ -1,7 +1,7 @@
 # app/config.py
 
-EMAIL = "post@mlinfomap.com"
-PASSWORD = "tmisxyakmbllotlw"
+EMAIL = ""
+PASSWORD = ""
 
 # whatsapp_authkey = "465024Abta9Wp0NQ2K68a31f3cP1"
 
@@ -82,12 +82,12 @@ phone_numbers = [
 # Database credential
 
 # DB_HOST = '3.108.39.84'
-DB_HOST = "mlinfomap.org"
-DB = "cris"
-DB_USER = "postgres"
-DB_PASSWORD = "Intel%401968"
+DB_HOST = ""
+DB = ""
+DB_USER = ""
+DB_PASSWORD = ""
 DB_PORT = 5432
 
 # Weather API
-API_KEY = "ce3f4317d6204d0f99571656250108"
-API_URL = "https://api.weatherapi.com/v1/forecast.json"
+API_KEY = ""
+API_URL = ""
