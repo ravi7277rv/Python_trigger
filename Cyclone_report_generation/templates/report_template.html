@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ report_title }}</title>
+    <style>
+
+                :root {
+                  --extreme-color: {{kpi_severity_range_color['severity_extreme_color']}};
+                  --high-color: {{kpi_severity_range_color['severity_high_color']}};
+                  --moderate-color: {{kpi_severity_range_color['severity_moderate_color']}};
+                  --low-color :{{kpi_severity_range_color['severity_low_color']}};
+                  --other-color:#ffffff;
+
+                  --extreme-min-color: {{kpi_severity_range_color['extreme_min_color']}};
+                  --high-min-color: {{kpi_severity_range_color['high_min_color']}};
+                  --moderate-min-color: {{kpi_severity_range_color['moderate_min_color']}};
+                  --low-min-color :{{kpi_severity_range_color['low_min_color']}};
+
+                  --legend-bgcolor: #902148;
+                  --border: #2b6642;
+                  --header-bg: #2b6642;
+                  --header-text: #fff;
+                  --gray-color: #dbdbdb;
+                  --table-font-size: 9px;
+                  --table-district-column-size: 88px;
+
+                }
+
+                /* Severity-based row coloring */
+                .severity-extreme td {
+                  background-color: var(--extreme-color);
+                  font-weight: 600;
+                }
+
+                .severity-high td {
+                  background-color: var(--high-color);
+                  font-weight: 600;
+                }
+
+                .severity-moderate td {
+                  background-color: var(--moderate-color);
+                }
+
+                .severity-low td {
+                  background-color: var(--low-color);
+                }
+
+                .severity-other td {
+                  background-color: var(--other-color);
+                }
+
+                body {
+                  font-family: "Arial", sans-serif;
+                  color: #333;
+                  margin: 0;
+                  padding: 0;
+                }
+
+                .container {
+                  width: 100%;
+                  max-width: 1200px;
+                  margin: 0 auto;
+                }
+
+                .table-district-column{
+                    width: var(--table-district-column-size)
+                }
+                .spanPad {
+                  padding: 4px 8px;
+                }
+
+                .header {
+                  width: 100%;
+                  height: 40px;
+                  background: linear-gradient(90deg, #e6f0ea 51.44%, #a5f2c3 86.54%);
+                  box-shadow: 2px 2px 10px 2px rgb(231, 231, 231);
+                  margin-bottom: 12px;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                }
+
+                .left-header {
+                  width: max-content;
+                  padding: 0 5px;
+                  height: 100%;
+                  display: flex;
+                  justify-content: start;
+                  align-items: center;
+                }
+
+                .left-header > img {
+                  height: 40px;
+                  width: 45px;
+                }
+
+                .left-header-districts {
+                  color: #000000;
+                  font-size: 20px;
+                  font-weight: bold;
+                  font-family: sans-serif;
+                  margin-left: 10px;
+                }
+
+                .right-header {
+                  width: max-content;
+                  padding: 0 5px;
+                  height: 100%;
+                  display: flex;
+                  justify-content: start;
+                  align-items: center;
+                }
+
+                .right-header-date {
+                  color: #910ba6;
+                  font-size: 30px;
+                  font-weight: bold;
+                  font-family: sans-serif;
+                  margin-right: 10px;
+                }
+
+                .v_1, .Extreme {
+                  background: var(--extreme-color);
+                }
+
+                .v_2, .High {
+                  background: var(--high-color);
+                }
+
+                .v_3, .Moderate {
+                  background: var(--moderate-color);
+                }
+
+                .v_4, .Low{
+                  background: var(--low-color)
+                }
+
+                .data-1-row-1 > span {
+                  font-size: 12px;
+                  font-weight: 600;
+                }
+
+               .vmin_1, .Min_Extreme {
+                  background: var(--extreme-min-color);
+                }
+
+               .vmin_2, .Min_High {
+                  background: var(--high-min-color);
+                }
+
+               .vmin_3, .Min_Moderate {
+                  background: var(--moderate-min-color);
+                }
+
+               .vmin_4, .Min_Low {
+                  background: var(--low-min-color);
+                }
+
+               .vmin_4, .Min_Other {
+                  background: var(--other-color);
+                }
+
+
+                .rainfall-heading {
+                  color: white;
+                  background-color: #2b6642;
+                  text-align: center;
+                  margin: 0px;
+                  padding: 4px;
+                  font-size:14px;
+                }
+
+                .rainfall-heading h2 {
+                  margin: 0;
+                  padding: 10px;
+                }
+
+                table {
+                  width: 100%;
+                  height: auto;
+                  border-collapse: collapse;
+                  table-layout: fixed;
+                }
+
+                .a4-container {
+                  height: 100vh;
+                  margin: auto;
+                  background: linear-gradient(
+                      135deg,
+                      rgba(0, 123, 60, 0.95) 15%,
+                      rgba(255, 196, 46, 0.85) 75%
+                    ),
+                    url(../static/icons/cover-background.png);
+                  background-size: cover;
+                  background-position: center;
+                  border-radius: 10px;
+                  flex-direction: column;
+                  overflow: hidden;
+                  display: flex;
+                  flex-direction: column;
+                  overflow: hidden;
+                }
+
+                .main-content {
+                  flex: 1;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 3rem 2rem;
+                }
+
+                .glass-box {
+                  background: url("Image.jpg") rgba(255, 255, 255, 0.12) cover no-repeat;
+                  border-radius: 30px;
+                  padding: 3rem 2rem;
+                  backdrop-filter: blur(15px);
+                  -webkit-backdrop-filter: blur(15px);
+                  border: solid rgba(255, 255, 255, 0.2);
+                  border-radius: 50%;
+                  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                  text-align: center;
+                  width: 600px;
+                  height: 600px;
+                  color: #ffffff;
+                  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+                }
+
+                .logo-top-center {
+                  margin-bottom: 2rem;
+                }
+
+                .logo-top-center img {
+                  height: 200px;
+                  object-fit: contain;
+                }
+
+                .glass-box h2 {
+                  font-size: 1.8rem;
+                  font-weight: 700;
+                  margin: 0.5rem 0;
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                }
+
+                .state-title {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 16px;
+                  margin: 2rem 0;
+                }
+
+                .state-title span {
+                  font-size: 2rem;
+                  font-weight: 700;
+                  letter-spacing: 2px;
+                  text-transform: uppercase;
+                }
+
+                .state-title img {
+                  width: 45px;
+                  height: 45px;
+                  background-color: #28a745;
+                  padding: 6px;
+                  border-radius: 50%;
+                  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+                }
+
+                .weather-icon {
+                  width: 100px;
+                  height: 137px;
+                  margin-bottom: 1rem;
+                  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+                  transition: transform 0.3s ease;
+                  filter: opacity(0.7);
+                }
+
+                .glass-box p {
+                  font-size: 1.2rem;
+                  font-weight: 600;
+                  color: #f1f2f6;
+                  margin-top: 1rem;
+                }
+
+                footer {
+                  background: #2b6642;
+                  color: #fff;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  gap: 12px;
+                  font-weight: 700;
+                  font-size: 1.2rem;
+                  padding: 1rem;
+                  letter-spacing: 1px;
+                }
+
+                footer img {
+                  height: 36px;
+                  object-fit: contain;
+                  cursor: pointer;
+                  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.2));
+                  transition: transform 0.3s ease;
+                }
+
+                .page-index-table > tbody {
+                  border: none;
+                }
+                .page-index-table > thead > tr > th{
+                   background-color: #d5d5d5;
+                   padding: 5px;
+                   font-size: 14px;
+                }
+
+                .page-index-table > tbody > tr > td, .page-index-table > tbody > tr > th {
+                  padding: 4px 0px 4px 0px;
+                  border: none;
+                }
+
+                .page-index-table > thead > tr,
+                .page-index-table > tbody > tr {
+                  border: none;
+                }
+
+                .page-index-table > tbody > tr > td,
+                .page-index-table > tbody > tr > th {
+                  padding: 7px 1px 7px 1px;
+                  text-align: center;
+                  vertical-align: top;
+                  /* Aligns content to top for better visual */
+                  word-wrap: break-word;
+                  overflow-wrap: break-word;
+                  font-size: 12px;
+                }
+
+                .card {
+                  background: linear-gradient(90deg, #ecf0e6 51.44%, #defce9 86.54%);
+                  width: 48.6%;
+                  border-radius: 0px;
+                  outline: 1px solid #2b6642;
+                  font-size: 12px;
+                  position: relative;
+                }
+
+                .district_chart {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin: 1px auto;
+                  width: 100%
+                }
+
+                .district_chart_left,
+                .district_chart_right {
+                  width: 48%;
+                  height: 100%;
+                }
+
+                .district_chart_left img,
+                .district_chart_right img {
+                  height: 100%;
+                  width: 100%;
+                  object-fit: contain;
+                  /* or 'cover' depending on the layout you want */
+                  display: block;
+                }
+
+                .towers-risk-weather-forecast {
+                  width: 100%;
+                  /* background-image: url(../static/icons/Vector.svg); */
+                  background-repeat: repeat-x;
+                  background-size: 12% auto;
+                  background-position: bottom;
+                  /* margin-top: 5px; */
+                  border-radius: 10px;
+                }
+
+                .weather-forecast-title {
+                  margin-top: 20px;
+                  margin-bottom: 10px;
+                }
+
+                .weather-forecast-title > p {
+                  font-size: 32px;
+                  font-weight: bold;
+                  font-family: sans-serif;
+                }
+
+                .weather-forecast-days {
+                  height: 235px;
+                  display: flex;
+                  align-items: center;
+                }
+
+                .weather-forecast-days-icons {
+                  width: 157px;
+                  height: 200px;
+                  display: flex;
+                  align-items: end;
+                }
+
+                .icons-list {
+                    height: 92%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    background: white;
+                    border-radius: 5px;
+                    gap: 3px;
+                }
+
+                .icons-list  img {
+                    width: 20px;
+                    height: 20px;
+                    background: #2b6642;
+                    border-radius: 50%;
+                    padding: 4px;
+                }
+
+                .icons-list > div{
+                  display: flex;
+                  align-items: center;
+                  gap:15px;
+                  font-size: 12px;
+                }
+
+                .weather-forecast-days-data {
+                  height: 210px;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: end;
+                  gap: 18px;
+                  font-size: 12px;
+                }
+
+                .forecast-days-data-1 {
+                  width: 190px;
+                  height: 104%;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-around;
+                  outline: 1px solid var(--border);
+                }
+
+                .data-1-row-1 {
+                  display: flex;
+                  justify-content: end;
+                  padding: 3px 7px 3px 7px;
+                }
+
+                .data-1-row-2 {
+                  width: 100%;
+                  height: max-content;
+                  display: flex;
+                  justify-content: space-evenly;
+                  align-items: center;
+                }
+
+                .row-2-data {
+                  width: 55px;
+                  height: 25px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
+
+                .legend-table  {
+                  width: 100%;
+                  height: auto;
+                  border-collapse: collapse;
+                  table-layout: fixed;
+                }
+
+                .legend-table > thead > tr > th, .legend-table > tbody > tr > td, .legend-table > tbody > tr > th{
+                   padding: 2px;
+                   font-size: 11px;
+                   border: 1px solid var(--border);
+                }
+
+                .legend-table > tbody > tr > td{
+                  text-align: center;
+                }
+
+              .weatherRisk-container {
+               margin-top: 16px;
+                color: #000;
+              }
+
+              .weatherRisk-title {
+                text-align: center;
+                background-color: #2b6642;
+                color: #fff;
+                padding: 4px;
+                font-size: 14px;
+                margin-bottom: 5px;
+              }
+
+              .weatherRisk-subtitle {
+                text-align: center;
+                font-size: 12px;
+                margin-bottom: 7px;
+                margin-top: 2px;
+                color: #333;
+              }
+
+              .weatherRisk-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 25px;
+                font-size: var(--table-font-size);
+              }
+
+              .weatherRisk-table th,
+              .weatherRisk-table td {
+                border: 1px solid var(--border);
+                padding: 8px 10px;
+                text-align: center;
+                vertical-align: middle;
+              }
+
+              .param-header {
+                background-color: #f0f0f0;
+                font-weight: bold;
+              }
+
+              .risk-extreme {
+                background: var(--extreme-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .risk-high {
+                background: var(--high-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .risk-moderate {
+                background: var(--moderate-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .risk-low {
+                background-color: var(--low-color);
+                color: black;
+                font-weight: bold;
+              }
+              .risk-min-extreme {
+                background: var(--extreme-min-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .risk-min-high {
+                background: var(--high-min-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .risk-min-moderate {
+                background: var(--moderate-min-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .risk-min-low {
+                background-color: var(--low-min-color);
+                color: black;
+                font-weight: bold;
+              }
+
+              .weatherRisk-table td:first-child {
+                text-align: left;
+                font-weight: bold;
+              }
+
+              .weatherRisk-icon {
+                width: 18px;
+                height: 18px;
+                margin-right: 6px;
+                vertical-align: middle;
+                background: #2b6642;
+                border-radius: 50%;
+                padding: 4px;
+              }
+
+              .rainfall-table-wrapper {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+              }
+
+              .main-header {
+                width: 100%;
+                background: var(--header-bg);
+                color: var(--header-text);
+                text-align: center;
+                padding: 4px;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+              }
+
+
+              .legend {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 60px;
+                padding: 2px 2px 2px 15px;
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+                font-size: 11px;
+              }
+
+              .no-risk{
+                background-color: whitesmoke;
+              }
+
+              .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+              }
+
+              .legend-swatch {
+                width: 18px;
+                height: 18px;
+                border: 1px solid #ccc;
+                border-radius: 2px;
+              }
+
+
+              table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 0;
+                font-size: var(--table-font-size);
+              }
+
+              th, td {
+                border: 1px solid var(--border);
+                text-align: center;
+                padding:2.5px;
+              }
+
+              thead th {
+                /* background: #f7fbf9; */
+                font-weight: 600;
+              }
+
+              .group-header {
+                font-weight: 700;
+              }
+
+              .district {
+                text-align: left;
+                padding: 5px;
+                font-weight: 600;
+              }
+
+              .no-risk { background: #fff; }
+              .low { background: var(--low-color); }
+              .moderate { background: var(--moderate-color); }
+              .high { background: var(--high-color); }
+              .extreme { background: var(--extreme-color); }
+
+              .rainfall-3day-wrapper {
+                margin-top: 15px;
+                width: 100%;
+                /* border: 2px solid #2f7a60; */
+                /* border-radius: 3px; */
+                background: #fff;
+                box-sizing: border-box;
+              }
+
+              .rainfall-3day-header {
+                background-color: var(--header-bg);
+                color: #fff;
+                text-align: center;
+                font-weight: 700;
+                font-size: 14px;
+                padding: 4px;
+                /* border-bottom: 2px solid #2f7a60; */
+              }
+
+              .rainfall-3day-legend {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 50px;
+                padding: 2px 2px 2px 15px;
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+                font-size: 11px;
+              }
+
+              .rainfall-3day-legend-item {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+              }
+
+              .rainfall-3day-color {
+                width: 18px;
+                height: 18px;
+                border: 1px solid #8b8787;
+              }
+
+              .rainfall-3day-other { background: var(--other-color); }
+              .rainfall-3day-low { background: var(--low-color); }
+              .rainfall-3day-moderate { background: var(--moderate-color); }
+              .rainfall-3day-high { background:var(--high-color); }
+              .rainfall-3day-extreme { background:var(--extreme-color); }
+
+              .rainfall-3day-table {
+                width: 100%;
+                border-collapse: collapse;
+                border: none;
+              }
+
+              .rainfall-3day-table th,
+              .rainfall-3day-table td {
+                border: 1px solid (--border);
+                text-align: center;
+                padding: 4px;
+                font-size: var(--table-font-size);
+              }
+
+              .rainfall-3day-district {
+                text-align: left;
+                font-weight: 600;
+                background: #f7f7f7;
+                padding-left: 10px;
+              }
+
+              .rainfall-3day-header-row th {
+                background: var(--gray-color);
+                font-weight: 700;
+              }
+
+              .rainfall-3day-low-cell { background: var(--green); }
+              .rainfall-3day-moderate-cell { background: var(--moderate-color); }
+              .rainfall-3day-high-cell { background:var(--high-color); }
+              .rainfall-3day-extreme-cell { background: var(--extreme-color); }
+
+              .temperature-table-wrapper {
+                width: 100%;
+                font-family: Arial, sans-serif;
+                overflow: hidden;
+              }
+
+              .main-header-temp {
+                background-color:var(--header-bg);
+                color: #fff;
+                text-align: center;
+                padding: 4px;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+              }
+
+              .legend-temp {
+                  display: flex;
+                  flex-wrap: wrap;
+                  align-items: center;
+                  gap: 10px;
+                  padding: 8px;
+                  border-left: 1px solid var(--border);
+                  border-right: 1px solid var(--border);
+                  padding-left: 15px;
+                  font-size: 12px;
+              }
+
+              .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+              }
+
+              .legend-swatch {
+                width: 16px;
+                height: 16px;
+                border: 1px solid #ccc;
+                border-radius: 2px;
+              }
+
+              .low { background: var(--low-color); }
+              .other { background: var(--other-color); }
+              .moderate { background: var(--moderate-color); }
+              .high { background: var(--high-color); }
+              .extreme { background: var(--extreme-color); color: #fff; }
+
+              .main-header-wind {
+                width: 100%;
+                background: var(--header-bg);
+                color: var(--header-text);
+                text-align: center;
+                margin-top: 15px;
+                padding: 4px;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+              }
+
+
+              /* table data css  */
+              .circle-title {
+          font-size: 20px;
+          font-weight: bold;
+          margin: 20px 0 10px;
+        }
+
+        .cyclone-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 13px;
+          margin-bottom: 30px;
+        }
+
+        .cyclone-table th,
+        .cyclone-table td {
+          border: 1px solid #000;
+          padding: 8px;
+          vertical-align: top;
+        }
+
+        .cyclone-table th {
+          background-color: #f0f0f0;
+          font-weight: bold;
+          text-align: center;
+        }
+
+        .page-break {
+          page-break-after: always;
+        }
+        .section-title {
+        width: 100%;
+        background: #2b6642;
+          text-align: center;
+          font-size: 16px;
+          margin: 25px 0;
+          padding: 5px 0;
+          color: white;
+        }
+
+        .first-section {
+          margin-top: 40px; /* extra margin for FIRST section only */
+        }
+
+        .circle-title {
+          font-size: 16px;
+          font-weight: bold;
+          margin: 10px 0 8px;
+        }
+        /* REMOVE: page-break before every section */
+        .circle-section {
+          margin-bottom: 25px;
+          page-break-inside: avoid; /* Prevent breaking table rows */
+        }
+
+        /* Keep only this */
+        .cyclone-map-container {
+          width: 100%;
+          max-width: 1200px;
+          page-break-before: always;
+          text-align: center;
+          padding: 5px 0 0 0;
+        }
+        .cyclone-map-title {
+          text-align: left;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 18px 0px;
+        text-transform: uppercase;
+      }
+
+      .cyclone-map-img-div{
+        position: relative;
+        width: 100%;
+        max-height: 950px;
+      }
+
+      .cyclone-map-img {
+        width: 100%;
+        max-height: 950px;
+        object-fit: contain;
+        margin: 0 auto;
+        display: block;
+        border: 1px solid #0002;
+        border-radius: 10px;
+        padding: 6px;
+      }
+      .disclaimer-div{
+        width: 100%;
+        margin: 10px 0px;
+      }
+      .disclaimer-text{
+        width: 98%;
+        margin: auto;
+        font-size: 14px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: left;
+      }
+
+
+      .districts-legend-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        border: 5px solid #d3d3d3;
+        padding: 5px 10px;
+        width: 150px;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+      }
+
+      .districts-legend-item {
+        display: flex;
+        align-items: center;
+        margin: 3px 0;
+      }
+
+      .districts-legend-color {
+        width: 25px;
+        height: 15px;
+        border: 2px solid #d3d3d3;
+        margin-right: 5px;
+      }
+
+      .districts-legend-text {
+        font-size: 10px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Cover Page -->
+      <div class="a4-container">
+        <div class="main-content">
+          <div class="glass-box">
+            <div class="logo-top-center">
+              <img src="{{icons['header_logo']}}" alt="Indus Towers Logo" />
+            </div>
+            <h2>Cyclone Report</h2>
+            <h2>For</h2>
+            <div class="state-title">
+              <span>Impacted Circles</span>
+            </div>
+            <img
+              src="{{icons['tower_img']}}"
+              alt="Weather Icon"
+              class="weather-icon"
+            />
+            <p>{{current_time[1]}}</p>
+          </div>
+        </div>
+        <footer>
+          <img
+            style="filter: brightness(0) invert(1)"
+            src="{{icons['ml_logo']}}"
+            alt="Company Logo"
+          />
+          ML INFOMAP
+        </footer>
+      </div>
+      <!-- End Cover Page -->
+
+      <!--Header-->
+      <div class="header" style="page-break-before: always">
+        <div class="left-header">
+          <img src="{{icons['indus_logo']}}" alt="indus_logo" />
+          <span class="left-header-districts"
+            >Weather Intelligence & Disaster Alert</span
+          >
+        </div>
+      </div>
+      <!-- Header END -->
+      <!-- Table Data  -->
+      {% if grouped and grouped|length > 0 %} {% for circle, dates in
+      grouped.items() %}
+      <div class="circle-section {% if loop.first %}first-section{% endif %}">
+        {% if loop.first %}
+        <div class="section-title">
+          Cyclone Impact Report - Day-wise & Circle-wise
+        </div>
+        {% endif %}
+
+        <h3 class="circle-title">{{ circle }} Circle</h3>
+
+        <table class="cyclone-table">
+          <thead>
+            <tr>
+              <th>DATE</th>
+              <th>WEATHER WARNING / IMPACT</th>
+              <th>AFFECTED DISTRICTS / REGIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for date, sev_data in dates.items() %} {% set row_count =
+            sev_data|length %} {% set first = True %} {% for severity, details
+            in sev_data.items() %}
+            <tr class="severity-{{ severity|lower }}">
+              {% if first %}
+              <td rowspan="{{ row_count }}">{{ date }}</td>
+              {% set first = False %} {% endif %}
+              <td>{{ details.description }}</td>
+              <td>{{ details.districts | join(', ') }}</td>
+            </tr>
+            {% endfor %} {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %} {% else %}
+      <div class="section-title">
+        Cyclone Impact Report - Day-wise & Circle-wise
+      </div>
+
+      <table class="cyclone-table">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>WEATHER WARNING / IMPACT</th>
+            <th>AFFECTED DISTRICTS / REGIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3" style="text-align: center; font-weight: bold">
+              No cyclone warnings or impacts reported.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      {% endif %}
+      <!-- Table Data End Here -->
+      <!-- Cyclone Map Section -->
+      <div class="cyclone-map-container">
+        <!--Header-->
+        <div class="header" style="page-break-before: always">
+          <div class="left-header">
+            <img src="{{icons['indus_logo']}}" alt="indus_logo" />
+            <span class="left-header-districts"
+              >Weather Intelligence & Disaster Alert</span
+            >
+          </div>
+        </div>
+        <!-- Header END -->
+        <h2 class="cyclone-map-title">Cyclone Map</h2>
+
+        {% if icons['cyclone_map'] %}
+        <div class="cyclone-map-img-div">
+          <img
+            src="{{ icons['cyclone_map'] }}"
+            alt="Cyclone Map"
+            class="cyclone-map-img"
+          />
+
+          <!-- Districts Legend -->
+          <div class="districts-legend-container">
+            <div class="districts-legend-item">
+              <span
+                class="districts-legend-color"
+                style="background-color: var(--extreme-color)"
+              ></span>
+              <span class="districts-legend-text">Warning (Take Action)</span>
+            </div>
+
+            <div class="districts-legend-item">
+              <span
+                class="districts-legend-color"
+                style="background-color: var(--high-color)"
+              ></span>
+              <span class="districts-legend-text">Alert (Be Prepared)</span>
+            </div>
+
+            <div class="districts-legend-item">
+              <span
+                class="districts-legend-color"
+                style="background-color: var(--moderate-color)"
+              ></span>
+              <span class="districts-legend-text">Watch (Be Updated)</span>
+            </div>
+
+            <div class="districts-legend-item">
+              <span
+                class="districts-legend-color"
+                style="background-color: var(--low-color)"
+              ></span>
+              <span class="districts-legend-text">No Warning (No Action)</span>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <p>No cyclone map available</p>
+        {% endif %}
+
+        <div class="disclaimer-div">
+          <p class="disclaimer-text">
+            <b>Disclaimer:</b>
+            <i>
+              The warnings issued for 2nd to 4th December are based on data
+              available as of {{date_string}} at {{time_string}}. These
+              forecasts are subject to change as weather conditions evolve.
+              Updated information will be provided in the next scheduled release
+              on 3rd December at 06:00 AM IST.
+            </i>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

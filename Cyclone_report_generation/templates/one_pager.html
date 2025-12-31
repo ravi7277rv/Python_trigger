@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ report_title }}</title>
+    <style>
+
+          :root {
+            --moderate-color: {{kpi_severity_range_color['severity_moderate_color']}};
+            --high-color: {{kpi_severity_range_color['severity_high_color']}};
+            --extreme-color: {{kpi_severity_range_color['severity_extreme_color']}};
+            --low-color :{{kpi_severity_range_color['severity_low_color']}};
+            --legend-bgcolor: #902148;
+            --gray-color: #dbdbdb;
+            --table-font-size: 10px;
+          }
+          body {
+            font-family: "Arial", sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+          }
+
+          .container {
+            margin: 0 auto;
+            padding: 10px;
+          }
+
+          .spanPad {
+            padding: 4px 8px;
+          }
+
+          .header {
+            width: 100%;
+            height: 45px;
+            background: linear-gradient(90deg, #e6f0ea 51.44%, #a5f2c3 86.54%);
+            box-shadow: 2px 2px 10px 2px rgb(231, 231, 231);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .left-header {
+            width: max-content;
+            padding: 0 5px;
+            height: 100%;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+          }
+
+          .left-header-districts {
+            color: #000000;
+            font-size: 22px;
+            font-weight: bold;
+            font-family: sans-serif;
+            margin-left: 10px;
+          }
+
+          .right-header {
+            width: max-content;
+            padding: 0 5px;
+            height: 100%;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+          }
+
+          .right-header-date {
+            color: #910ba6;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: sans-serif;
+            margin-right: 10px;
+          }
+
+          .v_1, .Extreme {
+            background: var(--extreme-color);
+          }
+
+          .v_2, .High {
+            background: var(--high-color);
+          }
+
+          .v_3, .Moderate {
+            background: var(--moderate-color);
+          }
+
+          .data-1-row-1 > span {
+            font-size: 13px;
+          }
+
+          .rainfall-heading {
+            color: white;
+            background-color: #2b6642;
+            text-align: center;
+            margin: 0px;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+          }
+
+          .rainfall-heading h2 {
+            margin: 0;
+            padding: 10px;
+          }
+
+          table {
+            width: 100%;
+            height: auto;
+            border-collapse: collapse;
+            table-layout: fixed;
+          }
+
+
+          /* Cover page CSS */
+          .a4-container {
+            height: 100vh;
+            margin: auto;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 123, 60, 0.95) 15%,
+                rgba(255, 196, 46, 0.85) 75%
+              ),
+              url(../static/icons/cover-background.png);
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            flex-direction: column;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+          }
+
+          .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+          }
+
+          .glass-box {
+            background: url("Image.jpg") rgba(255, 255, 255, 0.12) cover no-repeat;
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 600px;
+            height: 600px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+          }
+
+          .logo-top-center {
+            margin-bottom: 2rem;
+          }
+
+          .logo-top-center img {
+            height: 200px;
+            object-fit: contain;
+          }
+
+          .glass-box h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+
+          .state-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 2rem 0;
+          }
+
+          .state-title span {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+          }
+
+          .state-title img {
+            width: 40px;
+            height: 40px;
+            background-color: #28a745;
+            padding: 6px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+          }
+
+          .weather-icon {
+            width: 100px;
+            height: 137px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+            transition: transform 0.3s ease;
+            filter: opacity(0.7);
+          }
+
+          .glass-box p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f1f2f6;
+            margin-top: 1rem;
+          }
+
+          footer {
+            background: #2b6642;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 1rem;
+            letter-spacing: 1px;
+          }
+
+          footer img {
+            height: 36px;
+            object-fit: contain;
+            cursor: pointer;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+          }
+          /* End Cover page CSS */
+
+          .page-index-table > tbody {
+            border: none;
+          }
+          .page-index-table > thead > tr > th{
+             background-color: #d5d5d5;
+             padding: 5px;
+             font-size: 14px;
+          }
+          .page-index-table > tbody > tr > td, .page-index-table > tbody > tr > th {
+            padding: 4px 0px 4px 0px;
+            border: none;
+          }
+          .page-index-table > thead > tr,
+          .page-index-table > tbody > tr {
+            border: none;
+          }
+
+           .page-index-table > tbody > tr > td,
+          .page-index-table > tbody > tr > th {
+            padding: 7px 1px 7px 1px;
+            text-align: center;
+            vertical-align: top;
+            /* Aligns content to top for better visual */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 12px;
+          }
+
+          .card {
+            background: linear-gradient(90deg, #ecf0e6 51.44%, #defce9 86.54%);
+            width: 48.6%;
+            border-radius: 0px;
+            outline: 1px solid #2b6642;
+            font-size: 12px;
+            position: relative;
+          }
+
+          .district_chart {
+            display: flex;
+            justify-content: end;
+            align-items: stretch;
+            margin: 1px auto;
+            width: 100%;
+          }
+
+          .district_chart_left,
+          .district_chart_right {
+            width: 48%;
+            height: 100%;
+          }
+
+          .district_chart_left img,
+          .district_chart_right img {
+            height: 90%;
+            width: 90%;
+            object-fit: contain;
+            /* or 'cover' depending on the layout you want */
+            display: block;
+          }
+
+          /* Weather forecast tabular count */
+          .towers-risk-weather-forecast {
+            width: 100%;
+            /* background-image: url(../static/icons/Vector.svg); */
+            background-repeat: repeat-x;
+            background-size: 12% auto;
+            background-position: bottom;
+            /* margin-top: 5px; */
+            border-radius: 10px;
+          }
+
+          .weather-forecast-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+          }
+
+          .weather-forecast-title > p {
+            font-size: 32px;
+            font-weight: bold;
+            font-family: sans-serif;
+          }
+
+          .weather-forecast-days {
+            height: 235px;
+            display: flex;
+            align-items: center;
+          }
+
+          .weather-forecast-days-icons {
+            width: 150px;
+            height: 200px;
+            display: flex;
+            align-items: end;
+          }
+
+          .icons-list {
+              height: 90%;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-evenly;
+              background: white;
+              border-radius: 5px;
+              gap: 10px;
+          }
+
+          .icons-list  img {
+              width: 20px;
+              height: 20px;
+              background: #2b6642;
+              border-radius: 50%;
+              padding: 4px;
+          }
+
+          .icons-list > div{
+            display: flex;
+            align-items: center;
+            gap:15px;
+            font-size: 15px;
+          }
+
+          .weather-forecast-days-data {
+            height: 210px;
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            gap: 18px;
+            font-size: 12px;
+          }
+
+          .forecast-days-data-1 {
+            width: 190px;
+            height: 104%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            outline: 1px solid #2b6642;
+          }
+
+          .data-1-row-1 {
+            display: flex;
+            justify-content: end;
+            padding: 3px 7px 3px 7px;
+          }
+
+          .data-1-row-2 {
+            width: 100%;
+            height: max-content;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+          }
+
+          .row-2-data {
+            width: 55px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .legend-table  {
+                width: 100%;
+                height: auto;
+                border-collapse: collapse;
+                table-layout: fixed;
+              }
+
+          .legend-table > thead > tr > th, .legend-table > tbody > tr > td, .legend-table > tbody > tr > th{
+              padding: 4px 3px 4px 11px;
+              font-size: 10px;
+              border: 1px solid #2b6642;
+          }
+
+          .legend-table > tbody > tr > td{
+            text-align: center;
+          }
+
+
+           .tables-container {
+        font-family: "Poppins", sans-serif;
+        color: #222;
+        background: #fff;
+      }
+
+      .report-header {
+        background: #2b6642;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        padding: 12px 20px;
+        font-size: 16px;
+      }
+
+      .report-header .header-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 4px;
+      }
+
+      .weather-section {
+        border: 2px solid #2b6642;
+        border-top: none;
+        padding: 20px;
+      }
+
+      .note {
+        background: #e8f6f1;
+        border-left: 5px solid #2b6642;
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      h3 {
+        background: #2b6642;
+        color: white;
+        font-size: 12px;
+        padding: 4px 10px;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 0;
+      }
+
+      .weather-table,
+      .legend-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--table-font-size);
+      }
+      #rainfall-table-container, #temp-table-container, #wind-table-container, #visibility-table-container, humidity-table-container {
+         margin-bottom: 20px;
+      }
+
+
+      .weather-table th,
+      .legend-table th {
+        border: 1px solid #2b6642;
+        padding: 6px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .weather-table td,
+      .legend-table td {
+        border: 1px solid #2b6642;
+        text-align: center;
+        padding: 6px;
+      }
+
+      .weather-table .severity {
+        font-weight: bold;
+        text-align: left;
+        padding-left: 10px;
+        vertical-align: middle;
+        width: 130px;
+      }
+
+      .severity.very-heavy,
+      .legend-label.very-heavy {
+        background: var(--extreme-color)
+      }
+
+      .severity.heavy,
+      .legend-label.heavy {
+        background: var(--high-color)
+      }
+
+      .severity.moderate,
+      .legend-label.moderate {
+        background: var(--moderate-color)
+      }
+
+      .subhead th {
+        background: var(--gray-color) !important;
+        color: #333;
+        font-weight: 500;
+      }
+
+        .hazard-title{
+          background: var(--gray-color);
+          color: #000000;
+          font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!--Header-->
+      <div
+        class="tables-container"
+        id="5 KPI Tables for Severity Ditrict"
+        style="page-break-before: always"
+      >
+        <div class="header">
+          <div class="left-header">
+            <img
+              style="height: 45px; width: 45px"
+              src="{{icons['indus_logo']}}"
+              alt="indus_logo"
+            />
+            <span class="left-header-districts"
+              >Weather Intelligence & Disaster Alert</span
+            >
+          </div>
+        </div>
+      </div>
+      <!--END Header-->
+
+      <!-- chinmay -->
+      <div class="tables-container">
+        <div>
+          <div class="report-header">
+            <div class="header-content">
+              <span>Daily Weather Bulletin</span>
+              <span>{{circle_name}} Circle</span>
+              <span>{{forecast_day_date[0]['date']}}</span>
+            </div>
+          </div>
+
+          <div class="weather-section">
+            <!-- <p class="note">
+                * There will be less chance of Rainfall in Gujarat for the next <b>3 days</b><br>
+                * Rainfall will gradually increase across Gujarat from <b>28th May</b>
+              </p> -->
+            <div id="rainfall-table-container">
+              <h3 style="margin: 0">Rainfall Prediction - District view</h3>
+              <table class="weather-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Severity</th>
+                    <th colspan="3">Short Range Prediction</th>
+                    <th colspan="4">Long Range Prediction</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th>{{forecast_day_date[0]['date']}}</th>
+                    <th>{{forecast_day_date[1]['date']}}</th>
+                    <th>{{forecast_day_date[2]['date']}}</th>
+                    <th>{{forecast_day_date[3]['date']}}</th>
+                    <th>{{forecast_day_date[4]['date']}}</th>
+                    <th>{{forecast_day_date[5]['date']}}</th>
+                    <th>{{forecast_day_date[6]['date']}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="severity very-heavy">Extreme</td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day1']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day1']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day2']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day2']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day3']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day3']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day4']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day4']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day5']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day5']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day6']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day6']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day7']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day7']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="severity heavy">High</td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day1']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day1']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day2']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day2']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day3']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day3']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day4']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day4']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day5']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day5']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day6']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day6']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day7']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day7']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="severity moderate">Moderate</td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day1']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day1']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day2']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day2']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day3']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day3']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day4']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day4']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day5']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day5']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day6']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day6']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Rainfall']['day7']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Rainfall']['day7']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--<span style="color:red;font-size: 10px;font-weight: 600;">NOTE:&nbsp; There is no Alert in Extreme, High and Moderate<span>-->
+            </div>
+
+            <div id="wind-table-container">
+              <h3>Wind Prediction - District view</h3>
+              <table class="weather-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Severity</th>
+                    <th colspan="3">Short Range Prediction</th>
+                    <th colspan="4">Long Range Prediction</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th>{{forecast_day_date[0]['date']}}</th>
+                    <th>{{forecast_day_date[1]['date']}}</th>
+                    <th>{{forecast_day_date[2]['date']}}</th>
+                    <th>{{forecast_day_date[3]['date']}}</th>
+                    <th>{{forecast_day_date[4]['date']}}</th>
+                    <th>{{forecast_day_date[5]['date']}}</th>
+                    <th>{{forecast_day_date[6]['date']}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="severity very-heavy">Extreme</td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day1']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day1']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day2']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day2']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day3']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day3']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day4']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day4']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day5']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day5']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day6']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day6']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day7']['extreme_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day7']['extreme_districts']
+                      else 'Nil' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="severity heavy">High</td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day1']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day1']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day2']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day2']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day3']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day3']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day4']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day4']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day5']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day5']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day6']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day6']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day7']['high_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day7']['high_districts']
+                      else 'Nil' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="severity moderate">Moderate</td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day1']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day1']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day2']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day2']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day3']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day3']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day4']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day4']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day5']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day5']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day6']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day6']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                    <td>
+                      {{
+                      severity_districts_list['Wind']['day7']['moderate_districts']
+                      | join(', ') if
+                      severity_districts_list['Wind']['day7']['moderate_districts']
+                      else 'Nil' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--<span style="color:red;font-size: 10px;font-weight: 600;">NOTE:&nbsp; There is no Alert in Extreme, High and Moderate<span>-->
+            </div>
+
+            <!--
+              <div id="temp-table-container">
+                <h3>Temperature Prediction - District view</h3>
+                <table class="weather-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Severity</th>
+                      <th colspan="3">Short Range Prediction</th>
+                      <th colspan="4">Long Range Prediction</th>
+                    </tr>
+                    <tr class="subhead">
+                      <th>{{forecast_day_date[0]['date']}}</th>
+                      <th>{{forecast_day_date[1]['date']}}</th>
+                      <th>{{forecast_day_date[2]['date']}}</th>
+                      <th>{{forecast_day_date[3]['date']}}</th>
+                      <th>{{forecast_day_date[4]['date']}}</th>
+                      <th>{{forecast_day_date[5]['date']}}</th>
+                      <th>{{forecast_day_date[6]['date']}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="severity very-heavy">Extreme</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day1']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day1']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day2']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day2']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day3']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day3']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day4']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day4']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day5']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day5']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day6']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day6']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day7']['extreme_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day7']['extreme_districts'] else 'Nil' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="severity heavy">High</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day1']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day1']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day2']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day2']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day3']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day3']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day4']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day4']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day5']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day5']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day6']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day6']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day7']['high_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day7']['high_districts'] else 'Nil' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="severity moderate">Moderate</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day1']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day1']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day2']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day2']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day3']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day3']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day4']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day4']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day5']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day5']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day6']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day6']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Temperature_Max']['day7']['moderate_districts'] | join(', ') if severity_districts_list['Temperature_Max']['day7']['moderate_districts'] else 'Nil' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <span style="color:red;font-size: 10px;font-weight: 600;">NOTE:&nbsp; There is no Alert in Extreme, High and Moderate<span>
+              </div>
+              -->
+
+            <!--
+              <div id="humidity-table-container">
+                <h3>Humidity Prediction - District view</h3>
+                <table class="weather-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Severity</th>
+                      <th colspan="3">Short Range Prediction</th>
+                      <th colspan="4">Long Range Prediction</th>
+                    </tr>
+                    <tr class="subhead">
+                      <th>{{forecast_day_date[0]['date']}}</th>
+                      <th>{{forecast_day_date[1]['date']}}</th>
+                      <th>{{forecast_day_date[2]['date']}}</th>
+                      <th>{{forecast_day_date[3]['date']}}</th>
+                      <th>{{forecast_day_date[4]['date']}}</th>
+                      <th>{{forecast_day_date[5]['date']}}</th>
+                      <th>{{forecast_day_date[6]['date']}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="severity very-heavy">Extreme</td>
+                      <td>{{ severity_districts_list['Humidity']['day1']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day1']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day2']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day2']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day3']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day3']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day4']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day4']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day5']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day5']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day6']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day6']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day7']['extreme_districts'] | join(', ') if severity_districts_list['Humidity']['day7']['extreme_districts'] else 'Nil' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="severity heavy">High</td>
+                      <td>{{ severity_districts_list['Humidity']['day1']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day1']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day2']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day2']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day3']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day3']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day4']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day4']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day5']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day5']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day6']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day6']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day7']['high_districts'] | join(', ') if severity_districts_list['Humidity']['day7']['high_districts'] else 'Nil' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="severity moderate">Moderate</td>
+                      <td>{{ severity_districts_list['Humidity']['day1']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day1']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day2']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day2']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day3']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day3']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day4']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day4']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day5']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day5']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day6']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day6']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Humidity']['day7']['moderate_districts'] | join(', ') if severity_districts_list['Humidity']['day7']['moderate_districts'] else 'Nil' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <span style="color:red;font-size: 10px;font-weight: 600;">NOTE:&nbsp; There is no Alert in Extreme, High and Moderate<span>
+              </div>
+              -->
+
+            <!--
+              <div id="visibility-table-container">
+                <h3>Visibility Prediction - District view</h3>
+                <table class="weather-table">
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Severity</th>
+                      <th colspan="3">Short Range Prediction</th>
+                      <th colspan="4">Long Range Prediction</th>
+                    </tr>
+                    <tr class="subhead">
+                      <th>{{forecast_day_date[0]['date']}}</th>
+                      <th>{{forecast_day_date[1]['date']}}</th>
+                      <th>{{forecast_day_date[2]['date']}}</th>
+                      <th>{{forecast_day_date[3]['date']}}</th>
+                      <th>{{forecast_day_date[4]['date']}}</th>
+                      <th>{{forecast_day_date[5]['date']}}</th>
+                      <th>{{forecast_day_date[6]['date']}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="severity very-heavy">Extreme</td>
+                      <td>{{ severity_districts_list['Visibility']['day1']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day1']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day2']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day2']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day3']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day3']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day4']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day4']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day5']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day5']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day6']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day6']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day7']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day7']['extreme_districts'] else 'Nil' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="severity heavy">High</td>
+                      <td>{{ severity_districts_list['Visibility']['day1']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day1']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day2']['high_districts'] | join(', ') if severity_districts_list['Visibility']['day2']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day3']['high_districts'] | join(', ') if severity_districts_list['Visibility']['day3']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day4']['high_districts'] | join(', ') if severity_districts_list['Visibility']['day4']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day5']['high_districts'] | join(', ') if severity_districts_list['Visibility']['day5']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day6']['high_districts'] | join(', ') if severity_districts_list['Visibility']['day6']['high_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day7']['high_districts'] | join(', ') if severity_districts_list['Visibility']['day7']['high_districts'] else 'Nil' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="severity moderate">Moderate</td>
+                      <td>{{ severity_districts_list['Visibility']['day1']['extreme_districts'] | join(', ') if severity_districts_list['Visibility']['day1']['extreme_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day2']['moderate_districts'] | join(', ') if severity_districts_list['Visibility']['day2']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day3']['moderate_districts'] | join(', ') if severity_districts_list['Visibility']['day3']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day4']['moderate_districts'] | join(', ') if severity_districts_list['Visibility']['day4']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day5']['moderate_districts'] | join(', ') if severity_districts_list['Visibility']['day5']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day6']['moderate_districts'] | join(', ') if severity_districts_list['Visibility']['day6']['moderate_districts'] else 'Nil' }}</td>
+                      <td>{{ severity_districts_list['Visibility']['day7']['moderate_districts'] | join(', ') if severity_districts_list['Visibility']['day7']['moderate_districts'] else 'Nil' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <span style="color:red;font-size: 10px;font-weight: 600;">NOTE:&nbsp; There is no Alert in Extreme, High and Moderate<span>
+              </div>
+              -->
+
+            <h3 style="background: var(--legend-bgcolor)">Legend</h3>
+            <table class="legend-table">
+              <thead>
+                <tr>
+                  <th style="width:110px;">Severity</th>
+                  <th>Rainfall</th>
+                  <th>Wind</th>
+                  <!-- <th>Humidity</th>
+                    <th>Visibility</th>
+                      <th>Temperature</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="text-align: left;width:110px;" class="legend-label very-heavy">
+                    Extreme
+                  </td>
+                  <td>{{kpi_severity_range_color['extreme_rainfall']}}</td>
+                  <td>{{kpi_severity_range_color['extreme_wind']}}</td>
+                  <!--<td>{{kpi_severity_range_color['extreme_humidity']}}</td>
+                    <td>{{kpi_severity_range_color['extreme_visibility']}}</td>
+                    <td>{{kpi_severity_range_color['extreme_temperature']}}</td>-->
+                </tr>
+                <tr>
+                  <td style="text-align: left;width:110px;" class="legend-label heavy">
+                    High
+                  </td>
+                  <td>{{kpi_severity_range_color['high_rainfall']}}</td>
+                  <td>{{kpi_severity_range_color['high_wind']}}</td>
+                  <!--<td>{{kpi_severity_range_color['high_humidity']}}</td>
+                    <td>{{kpi_severity_range_color['high_visibility']}}</td>
+                    <td>{{kpi_severity_range_color['high_temperature']}}</td>-->
+                </tr>
+                <tr>
+                  <td style="text-align: left;width:110px;" class="legend-label moderate">
+                    Moderate
+                  </td>
+                  <td>{{kpi_severity_range_color['moderate_rainfall']}}</td>
+                  <td>{{kpi_severity_range_color['moderate_wind']}}</td>
+                  <!--<td>{{kpi_severity_range_color['moderate_humidity']}}</td>
+                    <td>{{kpi_severity_range_color['moderate_visibility']}}</td>
+                    <td>{{kpi_severity_range_color['moderate_temperature']}}</td>-->
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Hazard Section -->
+            <div id="visibility-table-container">
+              <h3>Hazard Prediction - District view</h3>
+              <table class="weather-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Perils</th>
+                    <th colspan="3">Short Range Prediction</th>
+                    <th colspan="4">Long Range Prediction</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th>{{forecast_day_date[0]['date']}}</th>
+                    <th>{{forecast_day_date[1]['date']}}</th>
+                    <th>{{forecast_day_date[2]['date']}}</th>
+                    <th>{{forecast_day_date[3]['date']}}</th>
+                    <th>{{forecast_day_date[4]['date']}}</th>
+                    <th>{{forecast_day_date[5]['date']}}</th>
+                    <th>{{forecast_day_date[6]['date']}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for record in hazard_districts %}
+                  <tr>
+                    <td class="severity hazard-title">{{record['hazard']}}</td>
+                    <td class="{{record.get('Day1', {}).get('for_color', '')}}">
+                      {{ record.get('Day1', {}).get('districts','') | join(', ')
+                      }}
+                    </td>
+                    <td class="{{record.get('Day2', {}).get('for_color', '')}}">
+                      {{ record.get('Day2', {}).get('districts', '') | join(', ')
+                      }}
+                    </td>
+                    <td class="{{record.get('Day3', {}).get('for_color', '')}}">
+                      {{ record.get('Day3', {}).get('districts', '') | join(', ')
+                      }}
+                    </td>
+                    <td class="{{record.get('Day4', {}).get('for_color', '')}}">
+                      {{ record.get('Day4', {}).get('districts', '') | join(', ')
+                      }}
+                    </td>
+                    <td class="{{record.get('Day5', {}).get('for_color', '')}}">
+                      {{ record.get('Day5', {}).get('districts', '') | join(', ')
+                      }}
+                    </td>
+                    <td class="{{record.get('Day6', {}).get('for_color', '')}}">
+                      {{ record.get('Day6', {}).get('districts', '') | join(', ')
+                      }}
+                    </td>
+                    <td class="{{record.get('Day7', {}).get('for_color', '')}}">
+                      {{ record.get('Day7', {}).get('districts', '') | join(', ')
+                      }}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <h3 style="background: var(--legend-bgcolor)">Legend</h3>
+            <table class="legend-table">
+              <thead>
+                <tr style="text-align: left">
+                  <th style="width:110px;">Severity</th>
+                  <th>Cyclone</th>
+                  <th>Flood</th>
+                  <th>Snowfall</th>
+                  <th>Lightning</th>
+                  <th>Avalanche</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="text-align: left;width:110px;" class="legend-label very-heavy">
+                    Extreme
+                  </td>
+                  <td>{{kpi_severity_range_color['extreme_cyclone']}}</td>
+                  <td>{{kpi_severity_range_color['extreme_flood']}}</td>
+                  <td>{{kpi_severity_range_color['extreme_snowfall']}}</td>
+                  <td>{{kpi_severity_range_color['extreme_lightning']}}</td>
+                  <td>{{kpi_severity_range_color['extreme_avalanche']}}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left;width:110px;" class="legend-label heavy">
+                    High
+                  </td>
+                  <td>{{kpi_severity_range_color['high_cyclone']}}</td>
+                  <td>{{kpi_severity_range_color['high_flood']}}</td>
+                  <td>{{kpi_severity_range_color['high_snowfall']}}</td>
+                  <td>{{kpi_severity_range_color['high_lightning']}}</td>
+                  <td>{{kpi_severity_range_color['high_avalanche']}}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left;width:110px;" class="legend-label moderate">
+                    Moderate
+                  </td>
+                  <td>{{kpi_severity_range_color['moderate_cyclone']}}</td>
+                  <td>{{kpi_severity_range_color['moderate_flood']}}</td>
+                  <td>{{kpi_severity_range_color['moderate_snowfall']}}</td>
+                  <td>{{kpi_severity_range_color['moderate_lightning']}}</td>
+                  <td>{{kpi_severity_range_color['moderate_avalanche']}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- chinmayend -->
+      <!-- END KPI Table Region -->
+    </div>
+  </body>
+</html>
