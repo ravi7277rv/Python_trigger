@@ -1,0 +1,30 @@
+2026-01-07 15:27:30,237 | INFO | hazard-pipeline | <module> | Hazard processing started
+2026-01-07 15:27:30,237 | INFO | hazard-pipeline | scrap_hazard_master_data | Trying hazard source: ScrapFromUrlSource
+2026-01-07 15:27:30,238 | INFO | hazard-pipeline | fetch_geojson_features | Starting GeoJSON fetch from 2 sources
+2026-01-07 15:27:30,238 | INFO | hazard-pipeline | fetch_geojson_features | Trying source 1/2 | id=1 | url=https://reactjs.imd.gov.in/geoserver/imd/wfs?service=WFS
+                        &version=1.0.0&request=GetFeature&typeName=imd:district_warnings_india
+                        &outputFormat=application/json&srsName=EPSG:4326
+2026-01-07 15:27:32,852 | INFO | hazard-pipeline | fetch_geojson_features | Successfully fetched 762 features from source_id=1
+2026-01-07 15:27:32,854 | INFO | hazard-pipeline | fetch | GeoJSON source succeeded: source_id=1
+2026-01-07 15:27:33,137 | INFO | hazard-pipeline | scrap_hazard_master_data | Hazard data obtained successfully from ScrapFromUrlSource | rows=762
+2026-01-07 15:27:33,137 | INFO | hazard-pipeline | insert_hazard_gdf_to_db | Inserting 762 hazard records into cris_engine database
+2026-01-07 15:27:33,137 | INFO | hazard-pipeline | insert_hazard_gdf_to_db | DB URL = postgresql+psycopg2://postgres:***@mlinfomap.org:5432/cris
+2026-01-07 15:27:33,561 | INFO | hazard-pipeline | insert_hazard_gdf_to_db | Hazard data inserted successfully to the cris_engine database
+2026-01-07 15:27:33,561 | INFO | hazard-pipeline | insert_hazard_gdf_to_db | Inserting 762 hazard records into weather_engine database
+2026-01-07 15:27:33,562 | INFO | hazard-pipeline | insert_hazard_gdf_to_db | DB URL = postgresql+psycopg2://postgres:***@43.205.58.152:5432/weather
+2026-01-07 15:27:34,965 | INFO | hazard-pipeline | insert_hazard_gdf_to_db | Hazard data inserted successfully to the weather_engine database
+2026-01-07 15:27:34,966 | INFO | hazard-pipeline | scrap_hazard_master_data | Hazard data inserted into both databases
+2026-01-07 15:27:34,971 | INFO | hazard-pipeline | <module> | Hazard table data formation started
+2026-01-07 15:27:34,972 | INFO | hazard-pipeline | wrapper | read_district_geometry_gdf_and_save_json execution started
+2026-01-07 15:27:36,168 | INFO | pyogrio._io | write | Created 381 records
+2026-01-07 15:27:36,168 | INFO | hazard-pipeline | wrapper | read_district_geometry_gdf_and_save_json execution completed successfully
+2026-01-07 15:27:36,168 | INFO | hazard-pipeline | wrapper | read_hazard_data_from_db execution started
+2026-01-07 15:27:43,622 | INFO | pyogrio._io | write | Created 753 records
+2026-01-07 15:27:43,624 | INFO | hazard-pipeline | wrapper | read_hazard_data_from_db execution completed successfully
+2026-01-07 15:27:43,624 | INFO | hazard-pipeline | wrapper | create_district_hazard_geojson execution started
+2026-01-07 15:27:43,643 | INFO | hazard-pipeline | wrapper | create_district_hazard_geojson execution completed successfully
+2026-01-07 15:27:43,643 | INFO | hazard-pipeline | wrapper | build_hazard_records execution started
+2026-01-07 15:27:43,905 | INFO | hazard-pipeline | wrapper | build_hazard_records execution completed successfully
+2026-01-07 15:27:43,907 | INFO | hazard-pipeline | wrapper | insert_hazards_forecast execution started
+2026-01-07 15:27:43,946 | INFO | hazard-pipeline | wrapper | insert_hazards_forecast execution completed successfully
+2026-01-07 15:27:43,946 | INFO | hazard-pipeline | <module> | Hazard data saved successfully
